@@ -10,6 +10,7 @@
    * What background color to use
    */
   export let backgroundColor: string = null;
+  $: backgroundColor;
   /**
    * How large should the button be?
    */
@@ -19,11 +20,8 @@
    */
   export let label = "";
 
-  let mode = primary
-    ? "storybook-button--primary"
-    : "storybook-button--secondary";
-
-  let style = backgroundColor ? `background-color: ${backgroundColor}` : "";
+  let style: string;
+  $: style = backgroundColor ? `background-color: ${backgroundColor}` : "";
 
   const dispatch = createEventDispatcher();
 
@@ -37,7 +35,9 @@
 
 <button
   type="button"
-  class={["storybook-button", `storybook-button--${size}`, mode].join(" ")}
+  class:button--primary={primary}
+  class:button--secondary={!primary}
+  class={["button", `button--${size}`].join(" ")}
   {style}
   on:click={onClick}
 >
@@ -45,8 +45,7 @@
 </button>
 
 <style lang="scss">
-  .storybook-button {
-    font-family: "Nunito Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  .button {
     font-weight: 700;
     border: 0;
     border-radius: 3em;
@@ -54,24 +53,24 @@
     display: inline-block;
     line-height: 1;
   }
-  .storybook-button--primary {
+  .button--primary {
     color: white;
     background-color: #1ea7fd;
   }
-  .storybook-button--secondary {
+  .button--secondary {
     color: #333;
     background-color: transparent;
-    box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;
+    box-shadow: #00000026 0px 0px 0px 1px inset;
   }
-  .storybook-button--small {
+  .button--small {
     font-size: 12px;
     padding: 10px 16px;
   }
-  .storybook-button--medium {
+  .button--medium {
     font-size: 14px;
     padding: 11px 20px;
   }
-  .storybook-button--large {
+  .button--large {
     font-size: 16px;
     padding: 12px 24px;
   }

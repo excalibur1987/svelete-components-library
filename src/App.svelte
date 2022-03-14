@@ -1,16 +1,15 @@
 <script lang="ts">
-  import { 
-     Button,
-   } from "@/index";
+  import { MultiSelectGrouping, Button } from "@/index";
   import { Router, Route, navigate } from "svelte-routing";
   import Wrapper from "@lib/Wrapper.svelte";
+  import { writable } from "svelte/store";
 
-  const componentsPaths = [
-    "Button",
-  ];
+  const componentsPaths = ["MultiSelectGrouping", "Button"];
 
-  let output: any;
-  $: output;
+  const output = writable<any>(undefined);
+
+  const args = writable<any>(undefined);
+  const elmArgs = writable<any>(undefined);
 </script>
 
 <main>
@@ -27,8 +26,40 @@
       {/each}
     </section>
     <Route path="/Button">
-      <Wrapper {output}>
-        <Button primary />
+      <Wrapper
+        bind:args={$args}
+        options={{
+          primary: "boolean",
+          backgroundColor: "text",
+          size: ["small", "medium", "large"],
+          label: "text",
+        }}
+        output={$output}
+      >
+        <Button {...$elmArgs} />
+      </Wrapper>
+    </Route>
+    <Route path="/MultiSelectGrouping">
+      <Wrapper bind:args={$args} output={$output}>
+        <MultiSelectGrouping
+          bind:selected={$output}
+          options={{
+            choices: [
+              { data: "Data1", group: "Group 1", area: "Area 3" },
+              { data: "Data2", group: "Group 1", area: "Area 3" },
+              { data: "Data3", group: "Group 1", area: "Area 3" },
+              { data: "Data4", group: "Group 1", area: "Area 3" },
+              { data: "Data5", group: "Group 2", area: "Area 4" },
+              { data: "Data6", group: "Group 2", area: "Area 4" },
+              { data: "Data7", group: "Group 2", area: "Area 4" },
+              { data: "Data8", group: "Group 2", area: "Area 4" },
+            ],
+            valueKey: "data",
+            groupBy: "group",
+            groupByKeys: ["group", "area"],
+          }}
+          maxShowCount={3}
+        />
       </Wrapper>
     </Route>
   </Router>
@@ -41,5 +72,8 @@
   }
   section.show-components {
     padding: 2rem;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
   }
 </style>
